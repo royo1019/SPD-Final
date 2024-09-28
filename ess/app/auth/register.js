@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import React, { useRef } from 'react';
 import { Formik } from "formik";
+import { Video, ResizeMode } from "expo-av";
 import { Stack } from "expo-router";
 import * as Yup from "yup";
 
@@ -16,93 +17,106 @@ const validationSchema = Yup.object().shape({
 });
 
 const Register = () => {
+    const videoRef = useRef(null); // Create a reference for the video
+
     return (
         <>
-            {/* This hides the header */}
             <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.container}>
-                <Text style={styles.title}>Register</Text>
-                <Formik
-                    initialValues={{ email: "", password: "", confirmPassword: "" }}
-                    onSubmit={(values) => {
-                        fetch("http://192.168.98.174:5000/api/auth/register", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                email: values.email,
-                                password: values.password,
-                            }),
-                        })
-                        .then((res) => res.json())
-                        .then((data) => {
-                            if (data.message === 'User registered successfully') {
-                                console.log("Registration successful:", data);
-                                Alert.alert("Success", data.message);
-                                // Optionally navigate to login page or clear form fields
-                            } else {
-                                Alert.alert("Registration failed", data.message);
-                            }
-                        })
-                        .catch((err) => {
-                            console.error("Error:", err);
-                            Alert.alert("Error", "An error occurred during registration.");
-                        });
+                {/* Fullscreen Video Background */}
+                <Video
+                    ref={videoRef}
+                    style={StyleSheet.absoluteFillObject} // Fill the entire screen
+                    source={{
+                        uri: "https://cdn.pixabay.com/video/2024/09/06/230060_large.mp4",
                     }}
-                    validationSchema={validationSchema}
-                >
-                    {({
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        values,
-                        errors,
-                        touched,
-                    }) => (
-                        <View style={styles.form}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Email"
-                                onChangeText={handleChange("email")}
-                                onBlur={handleBlur("email")}
-                                value={values.email}
-                                keyboardType="email-address"
-                            />
-                            {errors.email && touched.email ? (
-                                <Text style={styles.errorText}>{errors.email}</Text>
-                            ) : null}
+                    resizeMode={ResizeMode.COVER}
+                    shouldPlay
+                    isLooping
+                />
+                <View style={styles.formContainer}>
+                    <Text style={styles.title}>Register</Text>
+                    <Formik
+                        initialValues={{ email: "", password: "", confirmPassword: "" }}
+                        onSubmit={(values) => {
+                            fetch("http://192.168.1.5:5000/api/auth/register", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    email: values.email,
+                                    password: values.password,
+                                }),
+                            })
+                                .then((res) => res.json())
+                                .then((data) => {
+                                    if (data.message === 'User registered successfully') {
+                                        console.log("Registration successful:", data);
+                                        Alert.alert("Success", data.message);
+                                    } else {
+                                        Alert.alert("Registration failed", data.message);
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.error("Error:", err);
+                                    Alert.alert("Error", "An error occurred during registration.");
+                                });
+                        }}
+                        validationSchema={validationSchema}
+                    >
+                        {({
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                            values,
+                            errors,
+                            touched,
+                        }) => (
+                            <View style={styles.form}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Email"
+                                    onChangeText={handleChange("email")}
+                                    onBlur={handleBlur("email")}
+                                    value={values.email}
+                                    keyboardType="email-address"
+                                />
+                                {errors.email && touched.email ? (
+                                    <Text style={styles.errorText}>{errors.email}</Text>
+                                ) : null}
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Password"
-                                onChangeText={handleChange("password")}
-                                onBlur={handleBlur("password")}
-                                value={values.password}
-                                secureTextEntry
-                            />
-                            {errors.password && touched.password ? (
-                                <Text style={styles.errorText}>{errors.password}</Text>
-                            ) : null}
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Password"
+                                    onChangeText={handleChange("password")}
+                                    onBlur={handleBlur("password")}
+                                    value={values.password}
+                                    secureTextEntry
+                                />
+                                {errors.password && touched.password ? (
+                                    <Text style={styles.errorText}>{errors.password}</Text>
+                                ) : null}
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Confirm Password"
-                                onChangeText={handleChange("confirmPassword")}
-                                onBlur={handleBlur("confirmPassword")}
-                                value={values.confirmPassword}
-                                secureTextEntry
-                            />
-                            {errors.confirmPassword && touched.confirmPassword ? (
-                                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-                            ) : null}
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Confirm Password"
+                                    onChangeText={handleChange("confirmPassword")}
+                                    onBlur={handleBlur("confirmPassword")}
+                                    value={values.confirmPassword}
+                                    secureTextEntry
+                                />
+                                {errors.confirmPassword && touched.confirmPassword ? (
+                                    <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                                ) : null}
 
-                            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                                <Text style={styles.buttonText}>Register</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </Formik>
+                                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                                    <Text style={styles.buttonText}>Register</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </Formik>
+                </View>
             </View>
         </>
     );
@@ -116,12 +130,26 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 16,
-        backgroundColor: "#f5f5f5",
     },
     title: {
         fontSize: 32,
         fontWeight: "bold",
         marginBottom: 24,
+        color: "#000", // Change to black for visibility
+    },
+    formContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        width: "90%",
+        paddingHorizontal: 16,
+        paddingVertical: 20,
+        backgroundColor: "rgba(255, 255, 255, 0.9)", // Semi-transparent background
+        borderRadius: 20, // Curved corners
+        elevation: 5, // Shadow effect on Android
+        shadowColor: '#000', // Shadow effect on iOS
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
     },
     form: {
         width: "100%",
