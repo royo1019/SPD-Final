@@ -1,86 +1,107 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import React from 'react';
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router"; // Add Stack import
 import { Ionicons } from '@expo/vector-icons';
+import Feather from '@expo/vector-icons/Feather';
 
 const Home = () => {
     const router = useRouter();
 
     return (
-        <View style={styles.container}>
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search for essential items..."
-                />
-                <TouchableOpacity style={styles.searchButton}>
-                    <Ionicons name="search" size={24} color="white" />
-                </TouchableOpacity>
-            </View>
-
-            {/* Essential Items List (You can populate this dynamically) */}
-            <ScrollView style={styles.itemsContainer}>
-                <Text style={styles.sectionTitle}>Available Items:</Text>
-                {/* Example Items */}
-                <View style={styles.item}>
-                    <Text style={styles.itemText}>Iron Box</Text>
-                </View>
-                <View style={styles.item}>
-                    <Text style={styles.itemText}>Kettle</Text>
-                </View>
-                <View style={styles.item}>
-                    <Text style={styles.itemText}>Study Lamp</Text>
-                </View>
-                <View style={styles.item}>
-                    <Text style={styles.itemText}>Extension Cord</Text>
-                </View>
-                {/* Add more items as needed */}
-            </ScrollView>
-
-            {/* Bottom Navigation Bar */}
+        <>
+            {/* This hides the header */}
+            <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.navBar}>
-                <TouchableOpacity onPress={() => router.push('/profile')}>
-                    <Ionicons name="person-circle-outline" size={32} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push('/request-history')}>
+                <TouchableOpacity style={styles.menu} onPress={() => router.push('/requests')}>
                     <Ionicons name="list-outline" size={32} color="black" />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.profile} onPress={() => router.push('/profile')}>
+                    <Ionicons name="person-circle-outline" size={32} color="black" />
+                </TouchableOpacity>
+
             </View>
-        </View>
+            <View style={styles.container}>
+                {/* Search Bar */}
+                <View style={styles.searchContainer}>
+                    <Feather name="search" size={24} color="black" style={styles.searchIcon} />
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search"
+                    />
+                </View>
+
+                {/* Essential Items List (You can populate this dynamically) */}
+                <ScrollView style={styles.itemsContainer}>
+                    <Text style={styles.sectionTitle}>Available Items:</Text>
+                    {/* Example Items */}
+                    <View style={styles.item}>
+                        <Text style={styles.itemText}>Iron Box</Text>
+                    </View>
+                    <View style={styles.item}>
+                        <Text style={styles.itemText}>Kettle</Text>
+                    </View>
+                    <View style={styles.item}>
+                        <Text style={styles.itemText}>Study Lamp</Text>
+                    </View>
+                    <View style={styles.item}>
+                        <Text style={styles.itemText}>Extension Cord</Text>
+                    </View>
+                    {/* Add more items as needed */}
+                </ScrollView>
+
+                {/* Bottom Navigation Bar */}
+
+            </View>
+        </>
     );
 };
 
 export default Home;
 
+// Styles remain the same
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#fff",
+        paddingTop: 80,
+        paddingLeft: 30,
+        paddingRight: 30,
     },
     searchContainer: {
         flexDirection: 'row',
-        marginBottom: 16,
         alignItems: 'center',
+        position: 'relative',
+        marginBottom: 16,
     },
     searchInput: {
         flex: 1,
         height: 40,
         borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 16,
-        backgroundColor: '#fff',
+        borderWidth: 0,
+        borderRadius: 20,
+        paddingHorizontal: 45,
+        fontWeight: "500",
+        height: 60,
+        backgroundColor: '#f5f5f5',
     },
-    searchButton: {
-        marginLeft: 8,
-        backgroundColor: '#6200ea',
-        padding: 10,
-        borderRadius: 8,
+    searchIcon: {
+        position: 'absolute',
+        left: 15,
+        top: 17,
+        zIndex: 1,
+        fontWeight: "300",
     },
     itemsContainer: {
         flex: 1,
+    },
+    menu:
+    {
+        paddingLeft: 30,
+    },
+    profile:
+    {
+        paddingRight: 30,
     },
     sectionTitle: {
         fontSize: 24,
@@ -105,5 +126,15 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderColor: '#ccc',
         backgroundColor: '#fff',
+        paddingTop: 75,
+    },
+    headingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    heading: {
+        marginTop: 20,
+        fontSize: 24,
     },
 });

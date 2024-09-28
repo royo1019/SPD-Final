@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React from 'react';
 import { Formik } from "formik";
-import { Stack } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import * as Yup from "yup";
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email().label("Email"),
@@ -16,11 +18,16 @@ const validationSchema = Yup.object().shape({
 });
 
 const Register = () => {
+    const router = useRouter();
     return (
         <>
             {/* This hides the header */}
             <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.container}>
+                <TouchableOpacity style={styles.back_arrow} onPress={() => router.push("/")}>
+                    <AntDesign style={styles.back_arrow} name="left" size={24} color="black" />
+                    <Text style={styles.backText}>Back</Text>
+                </TouchableOpacity>
                 <Text style={styles.title}>Register</Text>
                 <Formik
                     initialValues={{ email: "", password: "", confirmPassword: "" }}
@@ -35,20 +42,21 @@ const Register = () => {
                                 password: values.password,
                             }),
                         })
-                        .then((res) => res.json())
-                        .then((data) => {
-                            if (data.message === 'User registered successfully') {
-                                console.log("Registration successful:", data);
-                                Alert.alert("Success", data.message);
-                                // Optionally navigate to login page or clear form fields
-                            } else {
-                                Alert.alert("Registration failed", data.message);
-                            }
-                        })
-                        .catch((err) => {
-                            console.error("Error:", err);
-                            Alert.alert("Error", "An error occurred during registration.");
-                        });
+                            .then((res) => res.json())
+                            .then((data) => {
+                                if (data.message === 'User registered successfully') {
+                                    console.log("Registration successful:", data);
+                                    Alert.alert("Success", data.message)
+                                    // Optionally navigate to login page or clear form fields
+
+                                } else {
+                                    Alert.alert("Registration failed", data.message);
+                                }
+                            })
+                            .catch((err) => {
+                                console.error("Error:", err);
+                                Alert.alert("Error", "An error occurred during registration.");
+                            });
                     }}
                     validationSchema={validationSchema}
                 >
@@ -100,6 +108,9 @@ const Register = () => {
                             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                                 <Text style={styles.buttonText}>Register</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity onPress={() => router.push('/auth/login')}>
+                                <Text style={styles.container}>Already have an account? Log in!</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                 </Formik>
@@ -117,6 +128,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 16,
         backgroundColor: "#f5f5f5",
+        textAlign: 'center',
+        fontWeight: '600',
+        paddingVertical: 40,
+        color: '#7d7d7d',
     },
     title: {
         fontSize: 32,
@@ -130,22 +145,42 @@ const styles = StyleSheet.create({
         height: 50,
         borderColor: "#ccc",
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 15,
         paddingHorizontal: 16,
         marginBottom: 16,
+        width: 300,
         backgroundColor: "#fff",
+        alignSelf: "center"
     },
     errorText: {
         color: "red",
         marginBottom: 16,
+    },
+    back_arrow:
+    {
+        position: 'absolute',
+        top: 30, // Adjust this value as needed
+        left: 10, // Distance from the left
+        zIndex: 1, // Ensure the icon is on top of other components
+    },
+    backText: {
+        position: 'absolute',
+        top: 32, // Adjust this value as needed
+        left: 35, // Distance from the left
+        zIndex: 1,
+        color: "black",
+        fontWeight: "700",
+        fontSize: 16,
     },
     button: {
         height: 50,
         backgroundColor: "#6200ea",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 8,
+        borderRadius: 25,
         marginTop: 16,
+        width: 200,
+        alignSelf: "center"
     },
     buttonText: {
         color: "#fff",
