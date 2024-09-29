@@ -9,6 +9,7 @@ export default function RootLayout() {
                 name="index" options={{ headerShown: false, title: "Home" }} />
             <Stack.Screen
                 name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="productlist" options={{ headerShown: false }} />
 
         </Stack>
     )
