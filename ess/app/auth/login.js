@@ -38,32 +38,39 @@ const Login = () => {
                     <Text style={styles.title}>Login</Text>
                     <Formik
                         initialValues={{ email: "", password: "" }}
-                        onSubmit={(values, { setSubmitting }) => {
-                            fetch("http://192.168.1.5:5000/api/auth/login", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    email: values.email,
-                                    password: values.password,
-                                }),
-                            })
-                                .then((res) => res.json())
-                                .then(async (data) => {
-                                    if (data.token) {
-                                        console.log("Login successful:", data);
-                                        await AsyncStorage.setItem('token', data.token);
-                                        router.push("/(tabs)");
-                                    } else {
-                                        Alert.alert("Login failed", data.message);
-                                    }
-                                })
-                                .catch((err) => {
-                                    console.error("Error:", err);
-                                    Alert.alert("Error", "An error occurred while logging in.");
-                                })
-                                .finally(() => setSubmitting(false));
+                        onSubmit={async (values, { setSubmitting }) => {
+                            // Temporarily bypass backend authentication
+                            try {
+                                // You can comment out the API call
+                                // fetch("http://192.168.1.7:5000/api/auth/login", {
+                                //     method: "POST",
+                                //     headers: {
+                                //         "Content-Type": "application/json",
+                                //     },
+                                //     body: JSON.stringify({
+                                //         email: values.email,
+                                //         password: values.password,
+                                //     }),
+                                // })
+                                // .then((res) => res.json())
+                                // .then(async (data) => {
+                                //     if (data.token) {
+                                //         console.log("Login successful:", data);
+                                //         await AsyncStorage.setItem('token', data.token);
+                                //         router.push("/(tabs)");
+                                //     } else {
+                                //         Alert.alert("Login failed", data.message);
+                                //     }
+                                // });
+
+                                // Directly navigate to the home page
+                                router.push("/(tabs)");
+                            } catch (err) {
+                                console.error("Error:", err);
+                                Alert.alert("Error", "An error occurred while logging in.");
+                            } finally {
+                                setSubmitting(false);
+                            }
                         }}
                         validationSchema={validationSchema}
                     >

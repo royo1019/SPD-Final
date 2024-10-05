@@ -39,7 +39,7 @@ const Register = () => {
                     <Formik
                         initialValues={{ email: "", password: "", confirmPassword: "" }}
                         onSubmit={(values) => {
-                            fetch("http://192.168.1.5:5000/api/auth/register", {
+                            fetch("http://192.168.1.7:5000/api/auth/register", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
