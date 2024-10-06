@@ -73,7 +73,7 @@ const Home = () => {
 
     const handleCardPress = (item) => {
         console.log('Item clicked:', item); // Log clicked item details
-        navigation.navigate('ProductList', { product: item }); // Use navigate
+        
     };
 
 
