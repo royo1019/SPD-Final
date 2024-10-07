@@ -93,3 +93,24 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
     },
 });
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    tabBar: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 60,
+        backgroundColor: '#ffffff',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+    },
+});
