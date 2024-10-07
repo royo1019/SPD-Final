@@ -73,7 +73,7 @@ const Home = () => {
 
     const handleCardPress = (item) => {
         console.log('Item clicked:', item); // Log clicked item details
-        navigation.navigate('productlist', { product: item }); // Use navigate
+        
     };
 
 
@@ -82,8 +82,6 @@ const Home = () => {
             {/* This hides the header */}
             <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.container}>
-                {/* Move SearchAnimation to the top */}
-                <SearchAnimation style={styles.searchbar} />
 
                 <Text style={styles.welcome}>Welcome, User!</Text>
                 <Text style={styles.subtext}>Buy or Borrow, Your Choice!</Text>
@@ -105,7 +103,6 @@ const Home = () => {
                 <ScrollView>
                     <View style={styles.sectionHeader}>
                         <Text style={styles.sectionTitle}>Popular Categories</Text>
-                        <Text style={styles.sectionTitle2}>Show All</Text>
                     </View>
                     {/* Render Cards for Categories */}
                     <FlatList

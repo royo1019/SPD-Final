@@ -17,18 +17,19 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Optionally restrict CORS in production
 
 # MongoDB Connection
 MONGODB_URI = os.getenv('MONGODB_URI')
 client = MongoClient(MONGODB_URI, server_api=ServerApi('1'))
 db = client['essenshare']
 users = db['users']
+
 try:
     client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+    logger.info("Successfully connected to MongoDB!")
 except Exception as e:
-    print(e)
+    logger.error(f"Error connecting to MongoDB: {str(e)}")
 
 # Secret key for JWT encoding/decoding
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'pannapanni')  # Change this to a secure key
@@ -42,18 +43,15 @@ def register():
     if not email or not password:
         return jsonify({"message": "Email and password are required"}), 400
 
+    if len(password) < 8:  # Enforce a minimum password length for security
+        return jsonify({"message": "Password must be at least 8 characters long"}), 400
+
     if users.find_one({"email": email}):
         return jsonify({"message": "User already exists"}), 400
 
     try:
-        # Hash the password before saving it
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        
-        users.insert_one({
-            "email": email,
-            "password": hashed_password  # Store the hashed password
-        })
-        
+        users.insert_one({"email": email, "password": hashed_password})
         logger.info(f"User registered successfully: {email}")
         return jsonify({"message": "User registered successfully"}), 201
 
@@ -71,14 +69,11 @@ def login():
         return jsonify({"message": "Email and password are required"}), 400
 
     user = users.find_one({"email": email})
-
     if not user:
         return jsonify({"message": "Invalid email or password"}), 401
 
     try:
-        # Compare the provided password with the hashed password
         if bcrypt.checkpw(password.encode('utf-8'), user['password']):
-            # Generate JWT token
             token = jwt.encode({
                 'email': email,
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
