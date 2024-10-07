@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import { StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons'; // Import an icon library
 
 export default function RootLayout() {
     // Shared value for animation
@@ -27,15 +28,71 @@ export default function RootLayout() {
                     tabBarStyle: styles.tabBar, // Apply unique styles to the tab bar
                 }}
             >
-                {/* Define your screens here */}
-                <Tabs.Screen name="index" options={{ title: 'Home' }} />
-                <Tabs.Screen name="othersrequests" options={{ title: 'Others requests' }} />
-                <Tabs.Screen name="myrequests" options={{ title: 'My Requests' }} />
-                <Tabs.Screen name="lentrequests" options={{ title: 'Lent Requests' }} />
+                {/* Home Tab */}
+                <Tabs.Screen
+                    name="index"
+                    options={{
+                        title: 'Home',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="home-outline" size={size} color={color} />
+                        ),
+                    }}
+                />
+                {/* Others Requests Tab */}
+                <Tabs.Screen
+                    name="othersrequests"
+                    options={{
+                        title: 'Others requests',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="list-outline" size={size} color={color} />
+                        ),
+                    }}
+                />
+                {/* My Requests Tab */}
+                <Tabs.Screen
+                    name="myrequests"
+                    options={{
+                        title: 'My Requests',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="clipboard-outline" size={size} color={color} />
+                        ),
+                    }}
+                />
+                {/* Lent Requests Tab */}
+                <Tabs.Screen
+                    name="lentrequests"
+                    options={{
+                        title: 'Lent Requests',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="hand-right-outline" size={size} color={color} />
+                        ),
+                    }}
+                />
             </Tabs>
         </Animated.View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    tabBar: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 60,
+        backgroundColor: '#ffffff',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+    },
+});
 
 const styles = StyleSheet.create({
     container: {
